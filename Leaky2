@@ -1,0 +1,64 @@
+package CongestionControl;
+
+import java.util.Scanner;
+
+public class CongestionControl {
+
+	public static void main(String[] args) throws InterruptedException {
+		int n, incoming, outgoing, store = 0, bucketsize;
+		Scanner scan = new Scanner(System.in);
+		
+		System.out.print("Enter bucket size: ");
+		bucketsize = scan.nextInt();
+		
+		System.out.print("Enter outgoing rate: ");
+		outgoing = scan.nextInt();
+		
+		System.out.print("Enter number of inputs: ");
+		n = scan.nextInt();
+		
+		System.out.print("Enter incoming size: ");
+		incoming = scan.nextInt();
+
+		while(n != 0) {
+			System.out.println("\nIncoming size is " + incoming);
+			
+			if(incoming <= (bucketsize - store)) {
+				store += incoming;
+				System.out.println("Bucket buffer size is " + store + " out of " + bucketsize);
+			}
+			else {
+				System.out.println("Packet loss : " + (incoming - (bucketsize - store)));
+				store = bucketsize;
+			
+				System.out.println("Bucket buffer size is " + store + " out of " + bucketsize);
+			}
+			
+			// After a cycle of outgoing
+			store -= outgoing;
+			if (store < 0) {
+				store = 0;
+			}
+			
+			System.out.println("After outgoing: " + store + " packets left out of " + bucketsize
+			+ " in buffer");
+		
+			n--;
+			Thread.sleep(3000);
+		}
+		
+		scan.close();
+	 }
+}
+
+#output
+
+Enter bucket size: 2
+Enter outgoing rate: 5
+Enter number of inputs: 1
+Enter incoming size: 6
+
+Incoming size is 6
+Packet loss : 4
+Bucket buffer size is 2 out of 2
+After outgoing: 0 packets left out of 2 in buffer
